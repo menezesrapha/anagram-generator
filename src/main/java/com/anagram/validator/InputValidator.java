@@ -1,7 +1,14 @@
 package com.anagram.validator;
 
+import java.util.Properties;
+
+import com.anagram.config.ConfigReader;
+
 public class InputValidator {
     
+    private static ConfigReader configReader = new ConfigReader();
+    private static Properties props = configReader.loadProperties();
+    private static Integer requestConfig = Integer.valueOf(props.getProperty("request.limit"));
     /**
      * Validates the input string for anagram generation.
      * 
@@ -9,7 +16,7 @@ public class InputValidator {
      * @return true if the input is valid, false otherwise
      */
     public static boolean isValidInput(String input) {
-        return input != null && !input.trim().isEmpty() && input.length() > 1;
+        return input != null && !input.trim().isEmpty() && input.length() > 1 && input.length() <= requestConfig;
     }
     
     /**
@@ -61,7 +68,7 @@ public class InputValidator {
      */
     public static void validateInput(String input) {
         if (!isValidInput(input)) {
-            throw new IllegalArgumentException("A entrada tem que ter mais de uma letra, não pode ser nula ou vazia");
+            throw new IllegalArgumentException("A entrada tem que ter mais de uma letra, ser menor ou igual a " + requestConfig + " e não pode ser nula ou vazia");
         }
         
         if (!containsOnlyLetters(input)) {
